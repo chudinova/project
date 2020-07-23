@@ -1,0 +1,18 @@
+/* Вывести список сотрудников, получающих максимальную заработную плату в своем отделе */
+select ID, max(number) 
+from department; 
+
+/* Вывести список ID отделов, количество сотрудников в которых не превышает 3 человек */
+select a.*
+from   employee a
+where  a.salary = ( select max(salary) from employee b
+                    where  b.department_id = a.department_id )
+                    
+/* Найти список ID отделов с максимальной суммарной зарплатой сотрудников */
+with sum_salary as
+  ( select department_id, sum(salary) salary
+    from   employee
+    group  by department_id )
+select department_id
+from   sum_salary a       
+where  a.salary = ( select max(salary) from sum_salary ) 
